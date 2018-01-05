@@ -130,14 +130,13 @@ Another form of parallelization is to assign a different *task* to each processo
 
 ### Pseudo-Datatypes:
 Throughout this API document, the following datatypes are used to represent expectations imposed on primitive-datatyped parameters to functions, uses of primitives in class methods, and so forth:
-
-`key` - a string used for accessing an arbitrary value in a plain object
-`path` - a string that conforms to an expected syntax (e.g., URL, file path, etc.)
-`struct` - an interface for a plain object (i.e., one that has expected key names)
-`hash` - a plain object whose keys are arbitrary (i.e., defined by you, the user)
-`list` - a one-dimensional array containing only elments of the same type/class
-`uint` - a non-negative integer
-`any` - any object or primitive data type **that are serializable via the [Structured Clone Algorithm](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm)**
+ - `key` - a string used for accessing an arbitrary value in a plain object
+ - `path` - a string that conforms to an expected syntax (e.g., URL, file path, etc.)
+ - `struct` - an interface for a plain object (i.e., one that has expected key names)
+ - `hash` - a plain object whose keys are arbitrary (i.e., defined by you, the user)
+ - `list` - a one-dimensional array containing only elments of the same type/class
+ - `uint` - a non-negative integer
+ - `any` - any object or primitive data type **that are serializable via the [Structured Clone Algorithm](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm)**
 
 ## API Documentation
 ------
@@ -202,7 +201,7 @@ The module's main export is the **Factory**.
      ```
 
 **Methods:**
- - `worker.dedicated(tasks: hash{name => `[`TaskHandler`](#task-handler)`})` -- declare the current thread as a dedicated worker while passing a hash of tasks that associates a task's `name` to its corresponding [TaskHandler](#task-handler).
+ - `worker.dedicated(tasks: hash{name => `[`TaskHandler`](#task-handler)`})` -- declare the current thread as a dedicated worker while passing a *hash* of tasks that associates a task's `name` to its corresponding [TaskHandler](#task-handler).
    - **returns** `undefined`
    - *example:*
      ```js
