@@ -1,0 +1,49 @@
+{
+  "name": "worker",
+  "version": "0.3.0",
+  "description": "Dual-paradigm parallelization API for both node.js and the browser",
+  "license": "ISC",
+  "author": {
+    "name": "Blake Regalia",
+    "email": "blake.regalia@gmail.com"
+  },
+  "browser": {
+    "./dist/main/node/locals.js": false
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "dist/main/module.js",
+  "keywords": [
+    "worker",
+    "web worker",
+    "parallel",
+    "parallelization",
+    "concurrency",
+    "cluster"
+  ],
+  "repository": "blake-regalia/worker.js.git",
+  "scripts": {},
+  "devDependencies": {
+    "browserify": "^15.0.0",
+    "chai": "^4.1.2",
+    "gulp": "^3.9.1",
+    "gulp-beautify": "^2.0.1",
+    "gulp-debug": "^3.1.0",
+    "gulp-istanbul": "^1.1.2",
+    "gulp-log": "0.0.0",
+    "gulp-mocha": "^4.3.1",
+    "gulp-plumber": "^1.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-soda": "^0.5.2",
+    "gulp-sourcemaps": "^2.6.3",
+    "gulp-tap": "^1.0.1",
+    "gulp-util": "^3.0.8",
+    "jmacs": "0.0.3",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0"
+  },
+  "dependencies": {
+    "shmmap": "^0.1.3"
+  }
+}

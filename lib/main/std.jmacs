@@ -1,0 +1,14 @@
+
+@def each(s_coll, s_iter)
+	@if endsWith(s_coll, 's')
+		@if startsWith(s_coll, 'a_')
+			@set s_w = slice(s_coll, 2, -1)
+			for(let i_@{s_w}=0, nl_@{s_w}s=@{s_coll}.length; i_@{s_w}<nl_@{s_w}s; i_@{s_w}++)
+		@elseif startsWith(s_coll, 'h_')
+			for(let s_@{s_w} in @{s_coll})
+		@end
+	@elseif s_iter
+		@set s_w = slice(s_coll, 2)
+		for(let @{s_iter}=0, nl_@{s_w}=@{s_coll}.length; @{s_iter}<nl_@{s_w}; @{s_iter}++)
+	@end
+@end
