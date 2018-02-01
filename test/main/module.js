@@ -175,6 +175,18 @@ describe('group', () => {
 			});
 	});
 
+	it('map/reduce empty', (fke_test) => {
+		let k_group = group(8);
+		k_group
+			.data([])
+			.map('concat')
+			.reduce('merge_concat').then(async (s_final=null) => {
+				await k_group.kill();
+				eq(null, s_final);
+				fke_test();
+			});
+	});
+
 	it('events', (fke_test) => {
 		let h_convo = {
 			greet: 'hi',
