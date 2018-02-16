@@ -345,8 +345,8 @@ A  [Group](#group) that has data attached and has been assigned at least one tas
    - **returns** a [new ArmedGroup](#armed-group)
  - `.series(each: `[`TaskResultCallback`](#task-result-callback)`[, then: callback(error=nul)])` -- handle each task result in order, calling `each` for each subset of data once it has been processed by the preceeding task. If an error is thrown by one of the workers, or once all tasks complete, `then` will be called.
    - **returns** a [new ArmedGroup](#armed-group)
- - `.end([then: callback(error)])` -- once all the previous tasks end, call `then`. This essentially ignores the results returned by the workers.
-   - **returns** a [new ArmedGroup](#armed-group)
+ - `.end([then: callback(error)])` -- once all the previous tasks end, call `then` if it is given. This essentially ignores the results returned by the workers. The returned Promise resolves after the last worker has finished *and* after `await then()` if it is given.
+   - **returns** a [new Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
  - `.reduce(taskName: string[, args: Array<any> | `[`Manifest`](#manifest)`[, events: `[`EventHash`](#event-hash)`]])` -- merge adjacent task results until there is one single result remaining.  For understanding whether or not you need to create a Manifest object, see the [Manifest](#manifest) documentation.
    - **returns** a [new Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
 
@@ -377,7 +377,11 @@ A function to implement on the 'master' side that gets called when a task succes
 ### interface **EventHash**
 A *hash* that binds callback listener functions to arbitrary event names, which can be emitted by the worker.
 
-**Signature:** `[eventName] => callback(...arguments: any)`
+**Signature:** `[eventName] => callback([subsetIndex: uint, ]...arguments: any)`
+
+**Arguments:**
+ 0. `subsetIndex: uint` -- the index (from 0 to # workers - 1) of the subset that this event was emitted from (only present for instances of [Group](#group)).
+ *rest*. `arguments: any` -- argument data emitted by the worker.
 
 **Example:**
 ```js
@@ -487,6 +491,7 @@ Each time a task handler function is called, its `this` will have the following 
 
      - *example:*
        ```js
+       // worker.js
        worker.dedicated({
            parse(at_code) {
                ds_stream.on('data', (s_data) => {
@@ -494,6 +499,23 @@ Each time a task handler function is called, its `this` will have the following 
                });
            },
        });
+
+       // master.js (using single worker)
+       k_worker.run('parse', [at_code], {
+           warn(s_warning) {
+               console.warn(s_warning);
+           },
+       });
+
+       // -- or --
+
+       // master.js (using worker group)
+       k_group.data(a_codes)
+           .map('parse', [at_code], {
+               warn(i_subset, s_warning) {
+                   console.warn('['+i_subset+'] '+s_warning);
+               },
+           });
        ```
 
 

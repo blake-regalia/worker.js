@@ -44,6 +44,9 @@
     "vinyl-source-stream": "^2.0.0"
   },
   "dependencies": {
-    "shmmap": "^0.1.3"
+    "colors": "^1.1.2",
+    "shmmap": "^0.1.3",
+    "uuid": "^3.2.1",
+    "uuidv5": "^1.0.0"
   }
 }
