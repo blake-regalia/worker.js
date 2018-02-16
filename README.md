@@ -21,7 +21,7 @@ A library most strongly suited for facilitating [data parallelism](https://en.wi
 
 ## Example
 ----------
-Let's take a long list of words, reverse the letters in each word, and then sort that list. Pretty straightforward?
+Let's take a long list of words, reverse the letters in each word, and then sort that list. Pretty straightforward. Here's a single-threaded way to do it:
 
 *serial.js*:
 ```js
@@ -49,7 +49,7 @@ fs.writeFile('out', a_sorted_words_reversed.join('\n'), (e_write) => {
 
 
 #### Parallelize
-In this scenario, we can save a bit of time by dividing the task among multiple cores.
+In this scenario, we can save a bit of time by breaking down the transformation into multiple units, and then dividing the workload among multiple cores.
 
 First, we define tasks in *the-worker.js*:
 ```js
@@ -147,6 +147,7 @@ Throughout this API document, the following datatypes are used to represent expe
    - [ArmedGroup](#armed-group)
    - [ActiveGroup](#active-group)
    - [TaskResultCallback](#task-result-callback)
+ - [WorkerOptions](#worker-options)
  - [EventHash](#event-hash) 
  - [Manifest](#manifest)
  - [Streams](#streams)
@@ -162,19 +163,19 @@ The module's main export is the **Factory**.
 `const worker = require('worker');`
 
 **Constructors:**
- - `worker.spawn(source: path)`
+ - `worker.spawn(source: path[, options: `[`WorkerOptions`](#worker-options)`)` -- spawn a single worker at the given `path`. Additional options can be specified in `options`.
    - **returns** a [new Worker](#worker)
    - *example:*
      ```js
      let k_worker = worker.spawn('./eg.js');
      ```
- - `worker.pool(source: path[, limit: int])` -- create a pool that will spawn up to `limit` workers (defaults to number of cores, i.e., `navigator.hardwareConcurrency` or `os.cpus().length`). If `limit` is negative, it indicates how many cores to attempt to reserve (such as `os.cpus().length -1`), but if there are not enough cores, then the final number of workers in the pool will always end up greater than or equal to `1`. Each worker will be spawned from the same source.
+ - `worker.pool(source: path[, limit: int][, options: `[`WorkerOptions`](#worker-options)`)` -- create a pool that will spawn up to `limit` workers (defaults to number of cores, i.e., `navigator.hardwareConcurrency` or `os.cpus().length`). If `limit` is negative, it indicates how many cores to attempt to reserve (such as `os.cpus().length -1`), but if there are not enough cores, then the final number of workers in the pool will always end up greater than or equal to `1`. Each worker will be spawned from the same source. Additional options for spawning the workers can be specified in `options`.
    - **returns** a [new Pool](#pool)
    - *example:*
      ```js
      let k_pool = worker.pool('./eg.js');
      ```
- - `worker.group(source: path[, count: int])` -- create a group (i.e., a cooperative pool) that will spawn up to `count` workers (defaults to number of cores, i.e., `navigator.hardwareConcurrency` or `os.cpus().length`). If `count` is negative, it indicates how many cores to attempt to reserve (such as `os.cpus().length -1`), but if there are not enough cores, then the final number of workers in the group will always end up greater than or equal to `1`. Each worker will be spawned from the same source.
+ - `worker.group(source: path[, count: int][, options: `[`WorkerOptions`](#worker-options)`)` -- create a group (i.e., a cooperative pool) that will spawn up to `count` workers (defaults to number of cores, i.e., `navigator.hardwareConcurrency` or `os.cpus().length`). If `count` is negative, it indicates how many cores to attempt to reserve (such as `os.cpus().length -1`), but if there are not enough cores, then the final number of workers in the group will always end up greater than or equal to `1`. Each worker will be spawned from the same source. Additional options for spawning the workers can be specified in `options`.
    - **returns** a [new Group](#group)
    - *example:*
      ```js
@@ -256,6 +257,8 @@ An abstraction of a [WebWorker](https://developer.mozilla.org/en-US/docs/Web/API
      });
      ```
 
+
+<a name="pool" />
 
 ### class **Pool**
 A pool of [Workers](#worker) for simple task parallelism. Create an instance by using the [Factory](#factory) method `worker.pool()`.
@@ -370,6 +373,26 @@ A function to implement on the 'master' side that gets called when a task succes
  - An `instanceof` an [Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error)
  - An `instanceof` a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) that rejects with some reason.
  - `undefined`
+
+<a name="worker-options" />
+
+### interface **WorkerOptions**
+A *struct* that specifies options for spawning a worker.
+
+**Keys for Worker:**
+ - [*Those given by the specification*](https://developer.mozilla.org/en-US/docs/Web/API/Worker/Worker)
+
+**Keys for ChildProcess:**
+ - `args: Array<string>` -- Arguments to append to the `ChildProcess#spawn` args list for the script.
+ - `env: hash` -- Extend/overwrite a clone of the current `process.env` object before sending it to the worker.
+ - `exec: string` -- Defaults to `process.execPath`.
+ - `cwd: string` -- Defaults to `process.cwd()`.
+ - `node_args: Array<string>` -- Arguments to inject in the `ChildProcess#spawn` args list for the executable (e.g., `'--max-old-space-size=8192'`)
+ - `inspect: struct` -- Enables debugger on the spawned worker(s)
+   - **keys:**
+     - `brk: boolean` -- Whether or not to break on the first line of execution
+     - `port: number` -- Specifies a single port to attach the debugger (only useful for single worker)
+     - `range: Array[low, high]` -- Specifies a range of ports to use for attaching debuggers (useful for [`Pool`](#pool) and [`Group`](#group)
 
 
 <a name="event-hash" />
