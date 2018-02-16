@@ -1,6 +1,6 @@
 {
   "name": "worker",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Dual-paradigm parallelization API for both node.js and the browser",
   "license": "ISC",
   "author": {
