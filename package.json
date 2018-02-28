@@ -23,7 +23,9 @@
     "cluster"
   ],
   "repository": "blake-regalia/worker.js.git",
-  "scripts": {},
+  "scripts": {
+    "flow": "flow"
+  },
   "devDependencies": {
     "browserify": "^15.0.0",
     "chai": "^4.1.2",
