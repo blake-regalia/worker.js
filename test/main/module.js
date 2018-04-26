@@ -8,7 +8,7 @@ const eq = (z_expect, z_actual) => {
 };
 const fs = require('fs');
 
-const worker = require('../../dist/main/module.js').scopify(require, () => {
+const worker = require('../../build/main/module.js').scopify(require, () => {
 	require('./workers/basic.js');
 }, 'undefined' !== typeof arguments && arguments);
 
@@ -265,5 +265,19 @@ describe('aux', () => {
 	// 	// eq('worker', s_package_name);
 	// });
 });
+
+
+/* TODO:
+
+ - await group#end
+ - await group#run
+ - event emitters
+ - channel messaging
+
+[node.js]
+ - channel socket file unlinking (including on abrubt exit)
+
+
+*/
 
 

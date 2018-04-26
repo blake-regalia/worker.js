@@ -1,5 +1,3 @@
-@include '../std.jmacs'
-
 const events = require('./events.js');
 const sharing = require('./sharing.js');
 
@@ -17,9 +15,7 @@ class worker extends Worker {
 
 	postMessage(h_msg, a_transfer_paths) {
 		let a_transfers = [];
-		@{each('a_transfer_paths')} {
-			let a_path = a_transfer_paths[i_transfer_path];
-
+		for(let a_path of a_transfer_paths) {
 			let z_head = h_msg;
 			let nl_path = a_path.length;
 			for(let i_step=0; i_step<nl_path-1; i_step++) {

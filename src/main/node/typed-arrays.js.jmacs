@@ -1,18 +1,18 @@
 const shmmap = require('shmmap');
 
-@include '../typed-arrays.jmacs'
+@import '../typed-arrays.js.jmacs'
 
-@set shared_memory 'shmmap.create'
-@set transferable false
+@$ shared_memory = 'shmmap.create';
+@$ transferable = false;
 
-@def create_shareable_memory(s_local, s_how)
-	// create shared memory segment
-	let [s_key, db_shared] = @{shared_memory}(@{s_how});
-	h_this.key = s_key;
-	@{s_local} = new @{typed_array}(db_shared.buffer);
-@end
-
-@{TypedArrays()}
+@{TypedArrays((s_local, s_how, s_typed_array) => {
+	return /* syntax: js */ `
+		// create shared memory segment
+		let [s_key, db_shared] = ${shared_memory}(${s_how});
+		h_this.key = s_key;
+		${s_local} = new ${s_typed_array}(db_shared.buffer);
+	`;
+})}
 
 // const shared_array_buffer = (nt_buffer) => {
 // 	let [s_key, db_array] = shm.create(nt_buffer);

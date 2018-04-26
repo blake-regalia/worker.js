@@ -1,5 +1,3 @@
-@include '../std.jmacs'
-
 const shmmap = require('shmmap');
 const stream = require('./stream.js');
 
@@ -38,15 +36,13 @@ module.exports = Object.assign(function(z_object) {
 		let h_head = h_data;
 
 		// each transferable item
-		@{each('a_transfers')} {
-			let h_transfer = a_transfers[i_transfer];
-
+		for(let h_transfer of a_transfers) {
 			// path to object
 			let a_path = h_transfer.path;
 
 			// walk path
 			let z_walk = h_head;
-			@{each('a_path', 'i_step')} {
+			for(let i_step=0, nl_path=a_path.length; i_step<nl_path; i_step++) {
 				let s_step = a_path[i_step];
 
 				// final step

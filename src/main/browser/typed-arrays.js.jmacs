@@ -1,7 +1,8 @@
-@include '../typed-arrays.jmacs'
+@import '../typed-arrays.js.jmacs'
+/* globals SharedArrayBuffer */
 
-@set shared_memory 'new SharedArrayBuffer'
-@set transferable true
+@$ shared_memory = 'new SharedArrayBuffer';
+@$ transferable = true;
 
 if('undefined' === typeof SharedArrayBuffer) {
 	global.SharedArrayBuffer = function() {
@@ -20,4 +21,3 @@ module.exports = {
 		@{memory_exports}
 	},
 };
-

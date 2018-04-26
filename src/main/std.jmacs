@@ -1,0 +1,14 @@
+
+@> each(s_coll, s_iter)
+	@- s_coll.endsWith('s')
+		@- s_coll.startsWith('a_')
+			@$ s_w = s_coll.slice(2, -1);
+			for(let i_@{s_w}=0, nl_@{s_w}s=@{s_coll}.length; i_@{s_w}<nl_@{s_w}s; i_@{s_w}++)
+		@+ s_coll.startsWith('h_')
+			for(let s_@{s_w} in @{s_coll})
+		@;
+	@+ s_iter
+		@$ s_w = slice(s_coll, 2);
+		for(let @{s_iter}=0, nl_@{s_w}=@{s_coll}.length; @{s_iter}<nl_@{s_w}; @{s_iter}++)
+	@;
+@;

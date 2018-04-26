@@ -1,6 +1,3 @@
-/* jmacs
-@include '../std.jmacs'
-*/
 
 const native_stream = require('stream');
 const events = require('events');
@@ -280,9 +277,9 @@ class handler {
 
 		// process chunks by writing to stream
 		let a_chunks = h_msg.chunks;
-		@{each('a_chunks')} {
+		for(let w_chunk of a_chunks) {
 			// emit data event on stream
-			b_clean = ds_stream.emit('data', a_chunks[i_chunk]);
+			b_clean = ds_stream.emit('data', w_chunk);
 		}
 
 		// pipe is clean

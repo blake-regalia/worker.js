@@ -8,12 +8,12 @@
     "email": "blake.regalia@gmail.com"
   },
   "browser": {
-    "./dist/main/node/locals.js": false
+    "./build/main/node/locals.js": false
   },
   "files": [
-    "dist"
+    "build"
   ],
-  "main": "dist/main/module.js",
+  "main": "build/main/module.js",
   "keywords": [
     "worker",
     "web worker",
@@ -24,29 +24,18 @@
   ],
   "repository": "blake-regalia/worker.js.git",
   "scripts": {
-    "flow": "flow"
+    "build": "mk",
+    "test": "mk test/main/bundle.js && mocha test/main/module.js"
   },
   "devDependencies": {
-    "browserify": "^15.0.0",
+    "browserify": "^16.2.0",
     "chai": "^4.1.2",
-    "gulp": "^3.9.1",
-    "gulp-beautify": "^2.0.1",
-    "gulp-debug": "^3.1.0",
-    "gulp-istanbul": "^1.1.2",
-    "gulp-log": "0.0.0",
-    "gulp-mocha": "^4.3.1",
-    "gulp-plumber": "^1.1.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-soda": "^0.5.2",
-    "gulp-sourcemaps": "^2.6.3",
-    "gulp-tap": "^1.0.1",
-    "gulp-util": "^3.0.8",
-    "jmacs": "0.0.3",
-    "vinyl-buffer": "^1.0.1",
-    "vinyl-source-stream": "^2.0.0"
+    "jmacs": "1.0.4",
+    "mkjs-cli": "0.0.9",
+    "mocha": "^5.1.1"
   },
   "dependencies": {
-    "colors": "^1.1.2",
+    "colors": "^1.2.1",
     "shmmap": "^0.2.0",
     "uuid": "^3.2.1",
     "uuidv5": "^1.0.0"

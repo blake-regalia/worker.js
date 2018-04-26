@@ -1,6 +1,7 @@
 node_modules
 scrap
 dist
+build
 lib/debug
 coverage
 .git-dev

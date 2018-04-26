@@ -1,5 +1,3 @@
-@include '../std.jmacs'
-
 const fs = require('fs');
 const events = require('events');
 const path = require('path');
@@ -386,9 +384,7 @@ module.exports = class ipc extends events {
 		let a_serializations = [];
 
 		// each path
-		@{each('a_paths')} {
-			let a_path = a_paths[i_path];
-
+		for(let a_path of a_paths) {
 			// parent pointer and its key
 			let h_parent;
 			let s_key;
@@ -397,9 +393,7 @@ module.exports = class ipc extends events {
 			let h_nav = h_data;
 
 			// each step in path
-			@{each('a_path', 'i_step')} {
-				s_key = a_path[i_step];
-
+			for(s_key of a_path) {
 				// set parent
 				h_parent = h_nav;
 
@@ -417,7 +411,7 @@ module.exports = class ipc extends events {
 			a_serializations.push(...a_add);
 		}
 
-		 return v8.serialize([h_data, a_serializations]);
+		return v8.serialize([h_data, a_serializations]);
 	}
 
 	serialize_transfer(z_data, a_path=[], zi_path_last=null) {
@@ -558,7 +552,7 @@ module.exports = class ipc extends events {
 			// short message
 			else {
 				// send port and message over ipc channel
-				this.send_port(d_port, {
+				this.send_port(z_port, {
 					data: h_msg,
 					port: h_port,
 				});

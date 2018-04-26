@@ -1,4 +1,4 @@
-const worker = require('../../../dist/main/module.js');
+const worker = require('../../../build/main/module.js');
 
 worker.dedicated({
 	reverse_string: s => s.split('').reverse().join(''),

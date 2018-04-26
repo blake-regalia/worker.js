@@ -1,0 +1,108 @@
+@$ shared_memory = '';
+@$ memory_exports = '';
+@$ transferable = false;
+
+const sharing = require('./sharing.js');
+const TypedArray = Object.getPrototypeOf(Object.getPrototypeOf(new Uint8Array(0))).constructor;
+
+@> TypedArrayS(f_shared, s_type, nt_el, s_suffix='')
+	@. let s_typed_array = s_type+nt_el+s_suffix+'Array';
+	class @{s_typed_array}S extends @{s_typed_array} {
+		constructor(z_arg_0, nb_offset, nl_array) {
+			// this
+			let h_this = {};
+
+			// self
+			let at_self;
+
+			@$ _to_bytes = '';
+			@- 8 !== nt_el
+				@$ _to_bytes = ' << '+(nt_el >> 4);
+			@;
+
+			// length constructor
+			if('number' === typeof z_arg_0) {
+				@{f_shared('at_self', 'z_arg_0'+_to_bytes, s_typed_array)}
+			}
+			// typed array constructor
+			else if(z_arg_0 instanceof TypedArray) {
+				// transferable typed array
+				if(sharing(z_arg_0)) {
+					debugger;
+				}
+				// basic typed array
+				else {
+					@{f_shared('at_self', 'z_arg_0.byteLength', s_typed_array)}
+
+					// copy data over
+					at_self.set(z_arg_0);
+				}
+			}
+			// array buffer constructor
+			else if(z_arg_0 instanceof ArrayBuffer) {
+				// force offset
+				nb_offset = nb_offset || 0;
+
+				// no length; deduce it from offset
+				if('undefined' === typeof nl_array) {
+					nl_array = z_arg_0.length - nb_offset;
+				}
+
+				// array size in bytes
+				let nb_array = nl_array@{_to_bytes};
+
+				// create shared memory segment
+				let dsb = @{shared_memory}(nb_array);
+
+				// create typed array
+				at_self = new @{s_typed_array}(dsb, 0, nb_array);
+
+				// create copy src
+				let at_src = new @{s_typed_array}(z_arg_0, nb_offset, nl_array);
+
+				// copy data over
+				at_self.set(at_src);
+			}
+
+			// create self
+			super(at_self);
+
+			// save fields
+			Object.assign(this, h_this);
+		}
+
+		base(...a_args) {
+			return new @{s_typed_array}(...a_args);
+		}
+	}
+
+	// static field
+	Object.assign(@{s_typed_array}S.prototype, {
+		[sharing.$_SHAREABLE]: 1,
+	});
+
+	@$ memory_exports += s_typed_array+'S: '+s_typed_array+'S,';
+	@$ memory_exports += s_typed_array+'T: '+s_typed_array+(transferable? '': 'S')+',';
+@;
+
+
+@> TypedArrays(f_shared=null)
+	@.{
+		if(!f_shared) {
+			f_shared = (s_local, s_how, s_typed_array) => {
+				// create shared memory segment
+				return `${s_local} = new ${s_typed_array}(${shared_memory}(${s_how}));\n`;
+			};
+		}
+	}
+
+	@{TypedArrayS(f_shared, 'Int', 8)}
+	@{TypedArrayS(f_shared, 'Uint', 8)}
+	@{TypedArrayS(f_shared, 'Uint', 8, 'Clamped')}
+	@{TypedArrayS(f_shared, 'Int', 16)}
+	@{TypedArrayS(f_shared, 'Uint', 16)}
+	@{TypedArrayS(f_shared, 'Int', 32)}
+	@{TypedArrayS(f_shared, 'Uint', 32)}
+	@{TypedArrayS(f_shared, 'Float', 32)}
+	@{TypedArrayS(f_shared, 'Float', 64)}
+@;

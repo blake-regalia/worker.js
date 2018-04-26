@@ -1,5 +1,3 @@
-@include '../std.jmacs'
-
 const {
 	N_CORES,
 } = require('./locals.js');
@@ -92,13 +90,11 @@ class pool extends lockable {
 		return k_worker;
 	}
 
-	async summon() {
+	summon() {
 		let a_workers = this.workers;
 
 		// each worker
-		@{each('a_workers')} {
-			let k_worker = a_workers[i_worker];
-
+		for(let k_worker of a_workers) {
 			// worker not busy
 			if(!k_worker.busy) {
 				return k_worker;
@@ -113,7 +109,7 @@ class pool extends lockable {
 		// queue for notification when workers become available
 		return new Promise((fk_worker) => {
 			this.wait_list.push((k_worker) => {
-				fk_worker(k_worker); 
+				fk_worker(k_worker);
 			});
 		});
 	}
