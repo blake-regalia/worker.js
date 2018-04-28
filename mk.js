@@ -79,7 +79,7 @@ module.exports = {
 		],
 		run: /* syntax: bash */ `
 			jmacs $1 > $@
-			eslint --fix --rule 'no-debugger: off' --quiet $@
+			eslint --fix --rule 'no-debugger: off' --color $@
 		`,
 	},
 
@@ -118,7 +118,7 @@ module.exports = {
 		],
 		run: /* syntax: bash */ `
 			jmacs $1 > $@
-			eslint --fix --rule 'no-debugger: off' --quiet $@
+			eslint --fix --rule 'no-debugger: off' --color $@
 		`,
 	},
 

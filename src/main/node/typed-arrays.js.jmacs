@@ -1,4 +1,12 @@
-const shmmap = require('shmmap');
+let shmmap = {
+	create() {
+		throw new Error('cannot use shared memory on this platform');
+	},
+};
+try {
+	shmmap = require('shmmap');
+}
+catch(e_require) {}
 
 @import '../typed-arrays.js.jmacs'
 

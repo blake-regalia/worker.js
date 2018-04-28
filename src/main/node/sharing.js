@@ -1,4 +1,13 @@
-const shmmap = require('shmmap');
+let shmmap = {
+	read_write() {
+		throw new Error('cannot use shared memory on this platform');
+	},
+};
+try {
+	shmmap = require('shmmap');
+}
+catch(e_require) {}
+
 const stream = require('./stream.js');
 
 const $_SHAREABLE = Symbol('shareable');

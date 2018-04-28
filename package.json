@@ -36,8 +36,10 @@
   },
   "dependencies": {
     "colors": "^1.2.1",
-    "shmmap": "^0.2.0",
     "uuid": "^3.2.1",
     "uuidv5": "^1.0.0"
+  },
+  "optionalDependencies": {
+    "shmmap": "^0.2.0"
   }
 }
