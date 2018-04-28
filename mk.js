@@ -86,10 +86,11 @@ module.exports = {
 	[`${pd_build_main}/:file.js`]: {
 		case: true,
 		deps: [
+			'src/main/$file.js',
 			s_self_dir,
 		],
 		run: /* syntax: bash */ `
-			cp src/main/$file.js $@
+			cp $1 $@
 		`,
 	},
 
@@ -124,10 +125,11 @@ module.exports = {
 	[`${pd_build_main}/:sub/:file.js`]: {
 		case: true,
 		deps: [
+			'src/main/$sub/$file.js',
 			s_self_dir,
 		],
 		run: /* syntax: bash */ `
-			cp src/main/$sub/$file.js $@
+			cp $1 $@
 		`,
 	},
 
