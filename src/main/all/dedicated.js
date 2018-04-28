@@ -89,6 +89,10 @@ module.exports = class dedicated extends stream.handler {
 	constructor(h_tasks, f_init=null) {
 		super();
 
+		if(!K_SELF) {
+			throw new Error(`oops! looks like you tried loading a dedicated worker in the top thread`);
+		}
+
 		Object.assign(this, {
 			tasks: h_tasks,
 			store: {},

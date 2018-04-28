@@ -13,6 +13,13 @@ module.exports = class node_worker extends ipc {
 		// push source to front of args
 		a_args.unshift(p_source);
 
+		// node inspect
+		let z_inspect = h_options.inspect;
+		if(z_inspect) {
+			let a_node_args = h_options.node_args = h_options.node_args? h_options.node_args.slice(0): [];
+			a_node_args.push('--inspect'+(z_inspect.brk || z_inspect.break? '-brk': '')+(z_inspect.port? '='+(z_inspect.port++): ''));
+		}
+
 		// push node args to front
 		if(h_options.node_args) a_args.unshift(...h_options.node_args);
 
