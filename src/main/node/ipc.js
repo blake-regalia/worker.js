@@ -101,7 +101,13 @@ module.exports = class ipc extends events {
 
 		// error handling
 		d_socket.on('error', (e_socket) => {
-			throw new Error(`worker IPC socket error: ${e_socket.message}\n${e_socket.stack}`);
+			// ignore disconnects from termination
+			if('ECONNRESET' === e_socket.code && this.disconnect) {
+				// ignore
+			}
+			else {
+				throw new Error(`worker IPC socket error: ${e_socket.message}\n${e_socket.stack}`);
+			}
 		});
 
 		// socket is being closed
@@ -176,6 +182,7 @@ module.exports = class ipc extends events {
 			args: h_options.args || [],
 
 			socket: d_socket,
+			disconnect: false,
 			channels: {},
 			ports: {},
 			port_msgs: {},

@@ -55,9 +55,15 @@ module.exports = class node_worker extends ipc {
 	}
 
 	terminate(s_kill='SIGTERM') {
+		// set disconnect flag: its okay if socket throws ECONNRESET
+		this.disconnect = true;
+
 		let u_proc = this.proc;
 		return new Promise((f_resolve, f_reject) => {
 			u_proc.on('exit', (x_code, s_signal) => {
+				// remove all socket listeners
+				this.socket.removeAllListeners();
+
 				f_resolve(x_code, s_signal);
 			});
 
