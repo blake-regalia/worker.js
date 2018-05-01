@@ -115,7 +115,7 @@ class pool extends lockable {
 	}
 
 	run(s_task, a_args, h_events) {
-		let dp_run = new Promise(async (fk_run, fe_run) => {
+		let dp_run = new Promise(async(fk_run, fe_run) => {
 			// summon a worker
 			let k_worker = await this.summon();
 

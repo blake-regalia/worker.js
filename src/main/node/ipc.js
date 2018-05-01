@@ -101,7 +101,7 @@ module.exports = class ipc extends events {
 
 		// error handling
 		d_socket.on('error', (e_socket) => {
-			console.warn('socket error: '+e_socket);
+			throw new Error(`worker IPC socket error: ${e_socket.message}\n${e_socket.stack}`);
 		});
 
 		// socket is being closed

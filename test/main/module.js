@@ -13,6 +13,7 @@ const worker = require('../../build/main/module.js').scopify(require, () => {
 }, 'undefined' !== typeof arguments && arguments);
 
 const spawn = (s_name='basic') => worker.spawn(`./workers/${s_name}.js`);
+const pool = (s_name='basic') => worker.pool(`./workers/${s_name}.js`);
 const group = (n_workers, s_name='basic') => worker.group(`./workers/${s_name}.js`, n_workers);
 
 const run = async (...a_args) => {
@@ -25,11 +26,11 @@ const run = async (...a_args) => {
 
 describe('worker', () => {
 
-	it('runs', async () => {
+	it('runs', async() => {
 		eq('yeh', await run('reverse_string', ['hey']));
 	});
 
-	it('twice', async () => {
+	it('twice', async() => {
 		let k_worker = spawn();
 		let s_yeh = await k_worker.run('reverse_string', ['hey']);
 		eq('hey', await run('reverse_string', [s_yeh]));
@@ -43,7 +44,7 @@ describe('worker', () => {
 			.catch((e_run) => {
 				fke_test(e_run);
 			});
-		setTimeout(async () => {
+		setTimeout(async() => {
 			await k_worker.kill();
 			fke_test();
 		}, 100);
@@ -53,14 +54,14 @@ describe('worker', () => {
 		let k_worker = spawn();
 		k_worker.run('fail')
 			.then(() => fke_test('error not caught by master'))
-			.catch(async (e_run) => {
+			.catch(async(e_run) => {
 				assert(e_run.message.includes('no such task'));
 				await k_worker.kill();
 				fke_test();
 			});
 	});
 
-	it('events', async () => {
+	it('events', async() => {
 		let h_convo = {
 			greet: 'hi',
 			chat: 'how r u',
@@ -98,6 +99,46 @@ describe('worker', () => {
 		let a_values = await k_worker.run('fetch', [['test']]);
 		await k_worker.kill();
 		eq('value', a_values[0]);
+	});
+});
+
+
+describe('pool', () => {
+	it('events', async() => {
+		let k_pool = pool();
+		let n_says = 10;
+		let c_byes = 0;
+		let a_waits = [];
+
+		const h_events = {
+			notify(s_say) {
+				if('bye' === s_say) c_byes += 1;
+			},
+		};
+
+		for(let i=0; i<n_says; i++) {
+			a_waits.push(k_pool
+				.run('events', [
+					[
+						{
+							name: 'notify',
+							data: 'hi',
+							wait: 5,
+						},
+						{
+							name: 'notify',
+							data: 'bye',
+							wait: 15,
+						},
+					],
+				], h_events));
+		}
+
+		await Promise.all(a_waits);
+
+		await k_pool.kill();
+
+		eq(n_says, c_byes);
 	});
 });
 
