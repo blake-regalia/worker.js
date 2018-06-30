@@ -205,14 +205,7 @@ module.exports = class ipc extends events {
 
 	deserialize(db_msg) {
 		// deserialize message
-		let h_data, a_transfers, p_origin;
-		try {
-			[h_data, a_transfers, p_origin] = v8.deserialize(db_msg);
-		}
-		catch(e_deserialize) {
-			debugger;
-			throw e_deserialize;
-		}
+		let [h_data, a_transfers, p_origin] = v8.deserialize(db_msg);
 
 		// objects were transfered
 		if(a_transfers.length) {
