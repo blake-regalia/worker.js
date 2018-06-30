@@ -151,7 +151,8 @@ module.exports = class dedicated extends stream.handler {
 
 		let {
 			id: i_task,
-			task: s_task,
+			task: s_task=null,
+			function: sf_task=null,
 			args: a_args,
 			inherit: i_inherit=0,
 			receive: i_receive=0,

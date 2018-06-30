@@ -18,6 +18,7 @@ module.exports = class ipc extends events {
 		let a_aggregate = [];
 		let nb_read = 0;
 		let nb_content = 0;
+		let cb_aggregate = 0;
 
 		let p_origin = h_options.origin || null;
 		let b_suicidal = h_options.suicidal || false;
@@ -42,6 +43,7 @@ module.exports = class ipc extends events {
 
 					// reset state variables
 					a_aggregate.length = 0;
+					cb_aggregate = 0;
 					nb_read = 0;
 
 					// deserialize
@@ -49,23 +51,25 @@ module.exports = class ipc extends events {
 				}
 				// went beyond what was expected
 				else if(nb_read > nb_content) {
-					let n_diff = nb_read - nb_content;
+					// byte index to sepearate this message at
+					let ib_separate = nb_content - cb_aggregate;
 
 					// correct slice
-					a_aggregate[a_aggregate.length-1] = db_msg.slice(0, n_diff);
+					a_aggregate[a_aggregate.length-1] = db_msg.slice(0, ib_separate);
 
 					// concat buffers
-					let db_content = Buffer.concat(a_aggregate, nb_read);
+					let db_content = Buffer.concat(a_aggregate, nb_content);
 
 					// reset state variables
 					a_aggregate.length = 0;
+					cb_aggregate = 0;
 					nb_read = 0;
 
 					// deserialize first chunk
 					this.deserialize(db_content);
 
 					// process rest
-					f_process(db_msg.slice(n_diff));
+					f_process(db_msg.slice(ib_separate));
 				}
 			}
 			// first read
@@ -91,7 +95,9 @@ module.exports = class ipc extends events {
 					nb_read = nb_msg - 4;
 
 					// push chunk to aggregate
-					a_aggregate.push(db_msg.slice(4));
+					let db_push = db_msg.slice(4);
+					cb_aggregate += db_push.length;
+					a_aggregate.push(db_push);
 				}
 			}
 		};
@@ -199,7 +205,14 @@ module.exports = class ipc extends events {
 
 	deserialize(db_msg) {
 		// deserialize message
-		let [h_data, a_transfers, p_origin] = v8.deserialize(db_msg);
+		let h_data, a_transfers, p_origin;
+		try {
+			[h_data, a_transfers, p_origin] = v8.deserialize(db_msg);
+		}
+		catch(e_deserialize) {
+			debugger;
+			throw e_deserialize;
+		}
 
 		// objects were transfered
 		if(a_transfers.length) {

@@ -169,7 +169,17 @@ class active_group {
 		return this.completable();
 	}
 
-	reduce(s_task, z_args=[], h_events=null, s_debug=null) {
+	reduce(z_task, z_args=[], h_events=null, s_debug=null) {
+		let h_reduce_task = {};
+		if('string' === typeof z_task) {
+			h_reduce_task.task = z_task;
+		}
+		else if('function' === typeof z_task) {
+			h_reduce_task.function = z_task;
+		}
+		else {
+			throw new TypeError(`invalid task arg: ${typeof z_task}`);
+		}
 		return new Promise((f_resolve) => {
 			Object.assign(this, {
 				debug: s_debug,
@@ -179,7 +189,7 @@ class active_group {
 				upstream_hold: this.task_count > 1,  // set `hold` flag for upstream sending its task
 				reductions: new convergent_pairwise_tree(this.task_count),
 				reduce_task: {
-					task: s_task,
+					...h_reduce_task,
 					manifest: new manifest(z_args),
 					events: h_events,
 					hold: true,  // assume another reduction will be performed by default
