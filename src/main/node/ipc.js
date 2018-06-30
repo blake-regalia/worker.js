@@ -71,6 +71,10 @@ module.exports = class ipc extends events {
 					// process rest
 					f_process(db_msg.slice(ib_separate));
 				}
+				// still reading; increment aggregate count
+				else {
+					cb_aggregate += nb_msg;
+				}
 			}
 			// first read
 			else {
