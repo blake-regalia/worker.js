@@ -1,14 +1,14 @@
 # worker.js 🔧
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] 
 
-A library most strongly suited for facilitating [data parallelism](https://en.wikipedia.org/wiki/Data_parallelism) within a series of orchestrated tasks that run in worker threads. Works with both node.js and the browser (including w/ browserify) in an abstraction that unifies Worker and Child Process.
+A library most strongly suited for facilitating [data parallelism](https://en.wikipedia.org/wiki/Data_parallelism) within a series of orchestrated tasks that run in worker threads. Works with both node.js and the browser (including w/ browserify and webpack) in an abstraction that unifies Worker and Child Process.
 
 ### Features
  - Enables the use of *pseudo-Transferable* objects in node.js between threads by using shared memory when available (meaning faster messaging with less overhead when passing large objects).
  - Serializes messages in node.js using the [Structured Clone Algorithm](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm), meaning you can pass actual JavaScript objects (not just JSON as is with process.send) between threads.
  - Allows subworkers (i.e., the ability for a worker to spawn its own nested worker) in all enviornments, including a workaround for browsers that do not support it natively.
  - Supports transmitting/receiving *streams* across threads (including special treatment for [File](https://developer.mozilla.org/en-US/docs/Web/API/File) and [Blob](https://developer.mozilla.org/en-US/docs/Web/API/Blob) in the browser).
- - Compatible with [Browserify](http://browserify.org/)
+ - Compatible with [Browserify](http://browserify.org/) and [webpack](https://webpack.js.org/)
 
 > If running on node.js, requires v8.0.0 or higher (for v8 serializer)
 
@@ -462,7 +462,7 @@ worker.spawn('./eg.js').run('parse', worker.manifest([
 
 When working in node.js, instances of [ReadableStream and WritableStream](https://nodejs.org/api/stream.html) can be passed between threads thru worker's standard messaging interface. Each event and method call on such streams are transmitted across threads, so keep in mind the additional overhead costs this may incur when streaming data. See [Manifest](#manifest) for an example.
 
-When deploying in the browser using browserify, the same rules apply to streams as with node.js since a reliable stream module can be used by both parties.
+When deploying in the browser, the same rules apply to streams as with node.js since a reliable stream module can be used by both parties.
 
 
 
