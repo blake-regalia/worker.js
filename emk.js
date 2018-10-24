@@ -23,7 +23,7 @@ module.exports = {
 			],
 
 			run: /* syntax: bash */ `
-				npx mocha test/main/module.js
+				npx mocha --timeout 5000 test/main/module.js
 			`,
 		}),
 	},
