@@ -24,8 +24,8 @@
   ],
   "repository": "blake-regalia/worker.js.git",
   "scripts": {
-    "build": "mk",
-    "test": "mk test/main/bundle.js && mocha test/main/module.js"
+    "build": "npx emk",
+    "test": "npx emk test"
   },
   "devDependencies": {
     "browserify": "^16.2.3",

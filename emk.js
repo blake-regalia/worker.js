@@ -58,6 +58,7 @@ module.exports = {
 				'bundle.js': () => ({
 					deps: [
 						'test/main/module.js',
+						'all',
 					],
 
 					run: /* syntax: bash */ `
