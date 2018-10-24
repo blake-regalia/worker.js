@@ -18,6 +18,7 @@ A library most strongly suited for facilitating [data parallelism](https://en.wi
  - [Example](#example)
  - [Intro](#intro)
  - [Documentation](#api-documentation)
+ - [Building with browserify or webpack for the browser](#browser)
 
 ## Example
 ----------
@@ -595,6 +596,23 @@ A division strategy is an algorithm that divides a list of elements into multipl
 A default division strategy that will attempt to divide the input data into equal *subsets* over the number of workers in the current [Group](#group). Inputs that are not evenly divisible by the number of workers in their [Group](#group) will result in slightly larger *subsets* nearer the end, increasing the liklihood that the workers assigned the first *subsets* finish before those assigned the last *subsets*; an outcome intended to favor responses that process results based on their order within the original input data.
 
 
+
+<a name="browser" />
+
+## Building with browserify or webpack for the browser
+
+This module ships ready-to-go with browserify. Just `npm install worker` in your project and require normally.
+
+For webpack however, you will need to add the following to your `webpack.config.js`:
+```js
+module.exports = {
+  resolve: {
+    aliasFields: ['browser'],
+  },
+};
+```
+
+This will let webpack know to use the `browser` key/value pair of worker's `package.json` file.
 
 
 [npm-image]: https://badge.fury.io/js/worker.svg
