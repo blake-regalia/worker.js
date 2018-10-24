@@ -23,7 +23,7 @@ module.exports = {
 			],
 
 			run: /* syntax: bash */ `
-				mocha test/main/module.js
+				npx mocha test/main/module.js
 			`,
 		}),
 	},
@@ -44,8 +44,8 @@ module.exports = {
 							],
 
 							run: /* syntax: bash */ `
-								jmacs $1 > $@ \
-								 && eslint --fix --rule 'no-debugger: off' --color $@
+								npx jmacs $1 > $@ \
+								 && npx eslint --fix --rule 'no-debugger: off' --color $@
 							`,
 						}),
 					},
@@ -62,7 +62,7 @@ module.exports = {
 					],
 
 					run: /* syntax: bash */ `
-						browserify $1 -d -o $@
+						npx browserify $1 -d -o $@
 					`,
 				}),
 			},
