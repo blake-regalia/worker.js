@@ -3,5 +3,6 @@ scrap
 dist
 build
 src/debug
+test/main/bundle.js
 coverage
 .git-dev

@@ -16,7 +16,7 @@ const spawn = (s_name='basic') => worker.spawn(`./workers/${s_name}.js`);
 const pool = (s_name='basic') => worker.pool(`./workers/${s_name}.js`);
 const group = (n_workers, s_name='basic') => worker.group(`./workers/${s_name}.js`, n_workers);
 
-const run = async (...a_args) => {
+const run = async(...a_args) => {
 	let k_worker = spawn();
 	let z_result = await k_worker.run(...a_args);
 	await k_worker.kill();
@@ -93,7 +93,7 @@ describe('worker', () => {
 		eq(a_data.length, c_responses);
 	});
 
-	it('store', async () => {
+	it('store', async() => {
 		let k_worker = spawn();
 		await k_worker.run('store', [[{test:'value'}]]);
 		let a_values = await k_worker.run('fetch', [['test']]);
@@ -154,7 +154,7 @@ describe('group', () => {
 			.thru('add', [3])
 			.each((x_n, i_n) => {
 				eq((a_seq[i_n]*2)+3, x_n[0]);
-			}, async () => {
+			}, async() => {
 				await k_group.kill();
 				fke_test();
 			});
@@ -168,7 +168,7 @@ describe('group', () => {
 			.map('wait')
 			.each((x_n, i_n) => {
 				eq(a_seq[i_n], x_n);
-			}, async () => {
+			}, async() => {
 				await k_group.kill();
 				fke_test();
 			});
@@ -183,7 +183,7 @@ describe('group', () => {
 			.map('wait')
 			.series((x_n) => {
 				a_res.push(x_n);
-			}, async () => {
+			}, async() => {
 				await k_group.kill();
 				deq(a_seq, a_res);
 				fke_test();
@@ -196,7 +196,7 @@ describe('group', () => {
 		k_group
 			.data(s_src.split(''))
 			.map('concat')
-			.reduce('merge_concat').then(async (s_final) => {
+			.reduce('merge_concat').then(async(s_final) => {
 				await k_group.kill();
 				eq(s_src, s_final);
 				fke_test();
@@ -209,7 +209,7 @@ describe('group', () => {
 		k_group
 			.data(s_src.split(''))
 			.map('concat')
-			.reduce('merge_concat').then(async (s_final) => {
+			.reduce('merge_concat').then(async(s_final) => {
 				await k_group.kill();
 				eq(s_src, s_final);
 				fke_test();
@@ -221,7 +221,7 @@ describe('group', () => {
 		k_group
 			.data([])
 			.map('concat')
-			.reduce('merge_concat').then(async (s_final=null) => {
+			.reduce('merge_concat').then(async(s_final=null) => {
 				await k_group.kill();
 				eq(null, s_final);
 				fke_test();
@@ -258,7 +258,7 @@ describe('group', () => {
 		k_group
 			.data(a_data)
 			.map('events', [], h_responses)
-			.end(async () => {
+			.end(async() => {
 				await k_group.kill();
 				eq(a_data.length, c_responses);
 				fke_test();
@@ -271,7 +271,7 @@ describe('group', () => {
 			.data([[100, 0, 0, 0]])
 			.map('pass')
 			// .thru('pass')
-			.reduce('sum').then(async (a_v) => {
+			.reduce('sum').then(async(a_v) => {
 				await k_group.kill();
 			});
 	});
@@ -282,7 +282,7 @@ describe('group', () => {
 describe('aux', () => {
 
 	if(!worker.browser) {
-		it('transfers', async () => {
+		it('transfers', async() => {
 			let km_args = worker.manifest([fs.readFileSync('./package.json')]);
 			let n_length = await run('count', km_args);
 
@@ -290,7 +290,7 @@ describe('aux', () => {
 		});
 	}
 
-	it('typed-array', async () => {
+	it('typed-array', async() => {
 		let at_test = new Uint8Array(10);
 		at_test[0] = 7;
 		at_test[1] = 5;
@@ -299,7 +299,7 @@ describe('aux', () => {
 		eq(5, n_at);
 	});
 
-	// it('streams', async () => {
+	// it('streams', async() => {
 	// 	let ds_words = fs.createReadStream('/usr/share/dict/words', 'utf8');
 	// 	let n_newlines = await run('count_str', [ds_words, '\n']);
 	// 	console.log(n_newlines);
